@@ -13,10 +13,8 @@ cache:
   - vendor
   - "$HOME/.composer/cache"
 install:
-- travis_retry composer self-update && composer --version
-- travis_retry composer global require "fxp/composer-asset-plugin:dev-master"
 - export PATH="$HOME/.composer/vendor/bin:$PATH"
-- travis_retry composer install --prefer-dist --no-interaction
+- travis_retry composer install --prefer-dist --no-interaction --no-plugins --no-progress
 script:
 - vendor/bin/codecept build
 - vendor/bin/codecept run
