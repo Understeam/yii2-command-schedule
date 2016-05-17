@@ -3,7 +3,6 @@
 namespace understeam\scheduler\tests\unit;
 
 use Codeception\TestCase\Test;
-use understeam\scheduler\DbTask;
 use understeam\scheduler\Scheduler;
 use understeam\scheduler\tests\commands\EchoCommand;
 use Yii;
