@@ -26,7 +26,8 @@ class CommandBusExecutor extends Component implements ExecutorInterface
      */
     public function execute($command)
     {
-        return $this->getCommandBus()->handle($command);
+        $this->getCommandBus()->handle($command);
+        return true;
     }
 
     /**

@@ -34,7 +34,7 @@ class Scheduler extends Component
      * @return bool
      * @throws InvalidParamException
      */
-    public function add($key, $command, $cronExpression, $repeat = false)
+    public function add($key, $command, $cronExpression, $repeat = true)
     {
         if (is_string($cronExpression)) {
             $cronExpression = CronExpression::factory($cronExpression);
@@ -105,7 +105,7 @@ class Scheduler extends Component
         $cronExpression = CronExpression::factory($task->getExpression());
         if ($cronExpression->isDue($time)) {
             $result = $this->execute($task->getCommand());
-            if ($result && $task->getRepeat() === false) {
+            if ($result && $task->getRepeat() == false) {
                 $task->deleteTask();
             }
             return $result;
