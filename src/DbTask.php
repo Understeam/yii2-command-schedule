@@ -127,6 +127,22 @@ class DbTask extends ActiveRecord implements TaskInterface
     }
 
     /**
+     * @return boolean
+     */
+    public function getRepeat()
+    {
+        return $this->getAttribute('repeat');
+    }
+
+    /**
+     * @param boolean $repeat
+     */
+    public function setRepeat($repeat)
+    {
+        $this->setAttribute('repeat', $repeat);
+    }
+    
+    /**
      * @return string
      */
     public function getKey()

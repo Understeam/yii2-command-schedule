@@ -13,6 +13,7 @@ class m160513_000000_scheduler_task extends Migration
             'status' => $this->smallInteger(),
             'command' => $this->text(),
             'expression' => $this->string(),
+            'repeat' => $this->boolean(),
             'createdAt' => $this->integer(),
             'updatedAt' => $this->integer(),
         ]);

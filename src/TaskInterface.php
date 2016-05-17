@@ -64,4 +64,14 @@ interface TaskInterface
      */
     public function setKey($key);
 
+    /**
+     * @return boolean
+     */
+    public function getRepeat();
+
+    /**
+     * @param boolean $repeat
+     */
+    public function setRepeat($repeat);
+
 }

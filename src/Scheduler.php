@@ -15,8 +15,6 @@ use Cron\CronExpression;
 /**
  * Class Scheduler TODO: Write class description
  *
- * TODO: One-time tasks support: disable task after one execution
- *
  * @author Anatoly Rugalev
  * @link https://github.com/AnatolyRugalev
  */
@@ -32,10 +30,11 @@ class Scheduler extends Component
      * @param null|string $key
      * @param mixed $command
      * @param CronExpression|string $cronExpression
+     * @param boolean $repeat
      * @return bool
      * @throws InvalidParamException
      */
-    public function add($key, $command, $cronExpression)
+    public function add($key, $command, $cronExpression, $repeat = false)
     {
         if (is_string($cronExpression)) {
             $cronExpression = CronExpression::factory($cronExpression);
@@ -52,6 +51,7 @@ class Scheduler extends Component
         }
         $task->setKey($key);
         $task->setCommand($command);
+        $task->setRepeat($repeat);
         $task->setExpression($cronExpression->getExpression());
         return $task->saveTask();
     }
@@ -104,7 +104,11 @@ class Scheduler extends Component
     {
         $cronExpression = CronExpression::factory($task->getExpression());
         if ($cronExpression->isDue($time)) {
-            return $this->execute($task->getCommand());
+            $result = $this->execute($task->getCommand());
+            if ($result && $task->getRepeat() === false) {
+                $task->deleteTask();
+            }
+            return $result;
         }
         return false;
     }
