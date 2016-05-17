@@ -24,7 +24,7 @@ class SchedulerController extends Controller
     public function actionIndex()
     {
         Console::output("Active tasks:");
-        foreach ($this->getScheduler()->getActiveTasks() as $task) {
+        foreach ($this->getScheduler()->all() as $task) {
             Console::output("\t" . $task->getExpression() . ' ' . $task->getKey());
         }
     }
@@ -32,7 +32,7 @@ class SchedulerController extends Controller
     public function actionCron()
     {
         $time = time();
-        foreach ($this->getScheduler()->getActiveTasks() as $task) {
+        foreach ($this->getScheduler()->all() as $task) {
             if ($this->getScheduler()->handle($task, $time)) {
                 Console::output("Executed " . $task->getKey());
             }

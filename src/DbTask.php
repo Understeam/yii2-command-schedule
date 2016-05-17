@@ -13,11 +13,23 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class DbTask TODO: Write class description
+ *
+ * @property integer $id
+ * @property string $key
+ * @property string $expression
+ * @property string $command
+ * @property integer $createdAt
+ * @property integer $updatedAt
+ * @property integer $status
+ *
  * @author Anatoly Rugalev
  * @link https://github.com/AnatolyRugalev
  */
 class DbTask extends ActiveRecord implements TaskInterface
 {
+
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 1;
 
     /**
      * @inheritdoc
@@ -46,20 +58,26 @@ class DbTask extends ActiveRecord implements TaskInterface
      * @param null $status
      * @return null|TaskInterface
      */
-    public static function findByKey($key, $status = null)
+    public static function get($key, $status = null)
     {
         return static::find()
             ->andWhere(['key' => $key])
-            ->andFilterWhere(['status' => $status])
+            ->andFilterWhere(['status' => self::STATUS_ACTIVE])
             ->one();
+    }
+
+    public function init()
+    {
+        $this->status = self::STATUS_ACTIVE;
+        parent::init();
     }
 
     /**
      * @return \Iterator|DbTask[]
      */
-    public static function getActiveTasks()
+    public static function getAll()
     {
-        return static::find()->andWhere(['status' => Scheduler::STATUS_ACTIVE])->each();
+        return static::find()->andWhere(['status' => self::STATUS_ACTIVE])->each();
     }
 
     /**
@@ -68,6 +86,12 @@ class DbTask extends ActiveRecord implements TaskInterface
     public function saveTask()
     {
         return $this->save(false);
+    }
+
+    public function deleteTask()
+    {
+        $this->status = self::STATUS_DELETED;
+        $this->save(false);
     }
 
     /**
@@ -100,22 +124,6 @@ class DbTask extends ActiveRecord implements TaskInterface
     public function setExpression($expression)
     {
         $this->setAttribute('expression', $expression);
-    }
-
-    /**
-     * @return integer
-     */
-    public function getStatus()
-    {
-        return (int)$this->getAttribute('status');
-    }
-
-    /**
-     * @param integer $status
-     */
-    public function setStatus($status)
-    {
-        $this->setAttribute('status', $status);
     }
 
     /**

@@ -27,18 +27,15 @@ class Scheduler extends Component
 
     public $executor = 'understeam\scheduler\CallbackExecutor';
 
-    const STATUS_DISABLED = 0;
-    const STATUS_ACTIVE = 1;
-
     /**
-     * Schedule an unique task
+     * TODO
      * @param null|string $key
      * @param mixed $command
      * @param CronExpression|string $cronExpression
      * @return bool
      * @throws InvalidParamException
      */
-    public function schedule($key, $command, $cronExpression)
+    public function add($key, $command, $cronExpression)
     {
         if (is_string($cronExpression)) {
             $cronExpression = CronExpression::factory($cronExpression);
@@ -49,10 +46,9 @@ class Scheduler extends Component
         /** @var TaskInterface $taskClass */
         $taskClass = $this->taskClass;
         /** @var TaskInterface $task */
-        $task = $taskClass::findByKey($key, self::STATUS_ACTIVE);
+        $task = $taskClass::get($key);
         if ($task === null) {
             $task = new $taskClass();
-            $task->setStatus(self::STATUS_ACTIVE);
         }
         $task->setKey($key);
         $task->setCommand($command);
@@ -60,23 +56,46 @@ class Scheduler extends Component
         return $task->saveTask();
     }
 
-    public function disableTask(TaskInterface $task)
-    {
-        $task->setStatus(self::STATUS_DISABLED);
-        return $task->saveTask();
-    }
-
     /**
-     * @return \Iterator|TaskInterface[]
+     * TODO
+     * @param $key
+     * @return null|TaskInterface
      */
-    public function getActiveTasks()
+    public function get($key)
     {
         /** @var TaskInterface $taskClass */
         $taskClass = $this->taskClass;
-        return $taskClass::getActiveTasks();
+        return $taskClass::get($key);
     }
 
     /**
+     * TODO
+     * @return \Iterator|TaskInterface[]
+     */
+    public function all()
+    {
+        /** @var TaskInterface $taskClass */
+        $taskClass = $this->taskClass;
+        return $taskClass::getAll();
+    }
+
+    /**
+     * TODO
+     * @param string $key
+     * @return boolean
+     */
+    public function delete($key)
+    {
+        $task = $this->get($key);
+        if ($task === null) {
+            return false;
+        }
+        $task->deleteTask();
+        return true;
+    }
+
+    /**
+     * TODO
      * @param TaskInterface $task
      * @param string|\DateTime $time
      * @return boolean
@@ -91,6 +110,7 @@ class Scheduler extends Component
     }
 
     /**
+     * TODO
      * @param mixed $command
      * @return boolean
      */
@@ -100,6 +120,7 @@ class Scheduler extends Component
     }
 
     /**
+     * TODO
      * @return ExecutorInterface
      */
     public function getExecutor()
@@ -108,12 +129,5 @@ class Scheduler extends Component
             $this->executor = Yii::createObject($this->executor);
         }
         return $this->executor;
-    }
-
-    public function findTaskByKey($key, $status = self::STATUS_ACTIVE)
-    {
-        /** @var TaskInterface $taskClass */
-        $taskClass = $this->taskClass;
-        return $taskClass::findByKey($key, $status);
     }
 }

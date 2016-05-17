@@ -34,42 +34,42 @@ class SchedulerTest extends Test
 
     public function testTaskCreation()
     {
-        $this->getScheduler()->schedule('test', 'command', '* * * * *');
-        expect($this->getScheduler()->findTaskByKey('test'))->notNull();
+        $this->getScheduler()->add('test', 'command', '* * * * *');
+        expect($this->getScheduler()->get('test'))->notNull();
     }
 
-    public function testTaskDisable()
+    public function testTaskDelete()
     {
-        $this->getScheduler()->schedule('test', 'command', '* * * * *');
-        $this->getScheduler()->disableTask($this->getScheduler()->findTaskByKey('test'));
-        expect($this->getScheduler()->findTaskByKey('test'))->null();
-        expect($this->getScheduler()->findTaskByKey('test', Scheduler::STATUS_DISABLED))->notNull();
+        $this->getScheduler()->add('test', 'command', '* * * * *');
+        expect($this->getScheduler()->get('test'))->notNull();
+        $this->getScheduler()->delete('test');
+        expect($this->getScheduler()->get('test'))->null();
     }
 
     public function testTaskReplace()
     {
-        $this->getScheduler()->schedule('test', 'command1', '0 * * * *');
-        $task = $this->getScheduler()->findTaskByKey('test');
+        $this->getScheduler()->add('test', 'command1', '0 * * * *');
+        $task = $this->getScheduler()->get('test');
         expect($task->getCommand())->equals('command1');
         expect($task->getExpression())->equals('0 * * * *');
 
-        $this->getScheduler()->schedule('test', 'command2', '* * * * *');
-        $task = $this->getScheduler()->findTaskByKey('test');
+        $this->getScheduler()->add('test', 'command2', '* * * * *');
+        $task = $this->getScheduler()->get('test');
         expect($task->getCommand())->equals('command2');
         expect($task->getExpression())->equals('* * * * *');
-        $this->getScheduler()->disableTask($task);
+        $this->getScheduler()->delete($task);
     }
 
     public function testTaskIteration()
     {
         for ($i = 1; $i <= 3; $i++) {
-            $this->getScheduler()->schedule("task{$i}", "command{$i}", '* * * * *');
+            $this->getScheduler()->add("task{$i}", "command{$i}", '* * * * *');
         }
-        $tasks = $this->getScheduler()->getActiveTasks();
+        $tasks = $this->getScheduler()->all();
         $count = 0;
+        // Cannot use count() because of \Iterator usage
         foreach ($tasks as $task) {
             $count++;
-            expect($task->getStatus())->equals(Scheduler::STATUS_ACTIVE);
         }
         expect($count)->equals(3);
     }
@@ -87,18 +87,18 @@ class SchedulerTest extends Test
 
     public function testTaskHandling()
     {
-        $tasks = $this->getScheduler()->getActiveTasks();
+        $tasks = $this->getScheduler()->all();
         foreach ($tasks as $task) {
-            $this->getScheduler()->disableTask($task);
+            $this->getScheduler()->delete($task);
         }
         $time = '2016-05-12 01:00:00';
-        $this->getScheduler()->schedule('test0', new EchoCommand('0'), '* * * * *'); // +
-        $this->getScheduler()->schedule('test1', new EchoCommand('1'), '0 * * * *'); // +
-        $this->getScheduler()->schedule('test2', new EchoCommand('2'), '0 0 * * *'); // -
-        $this->getScheduler()->schedule('test3', new EchoCommand('3'), '0 1 * * *'); // +
-        $this->getScheduler()->schedule('test4', new EchoCommand('4'), '0 1 12 * *');// +
-        $this->getScheduler()->schedule('test5', new EchoCommand('5'), '0 1 * 5 *'); // +
-        $tasks = $this->getScheduler()->getActiveTasks();
+        $this->getScheduler()->add('test0', new EchoCommand('0'), '* * * * *'); // +
+        $this->getScheduler()->add('test1', new EchoCommand('1'), '0 * * * *'); // +
+        $this->getScheduler()->add('test2', new EchoCommand('2'), '0 0 * * *'); // -
+        $this->getScheduler()->add('test3', new EchoCommand('3'), '0 1 * * *'); // +
+        $this->getScheduler()->add('test4', new EchoCommand('4'), '0 1 12 * *');// +
+        $this->getScheduler()->add('test5', new EchoCommand('5'), '0 1 * 5 *'); // +
+        $tasks = $this->getScheduler()->all();
         ob_start();
         foreach ($tasks as $task) {
             $this->getScheduler()->handle($task, $time);

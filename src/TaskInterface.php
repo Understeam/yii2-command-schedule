@@ -20,12 +20,19 @@ interface TaskInterface
      * @param integer $status
      * @return TaskInterface|null
      */
-    public static function findByKey($key, $status = null);
+    public static function get($key, $status = null);
+
+    /**
+     * @return \Iterator|TaskInterface[]
+     */
+    public static function getAll();
 
     /**
      * @return boolean
      */
     public function saveTask();
+
+    public function deleteTask();
 
     /**
      * @return mixed
@@ -48,16 +55,6 @@ interface TaskInterface
     public function setExpression($expression);
 
     /**
-     * @return integer
-     */
-    public function getStatus();
-
-    /**
-     * @param integer $status
-     */
-    public function setStatus($status);
-
-    /**
      * @return string
      */
     public function getKey();
@@ -66,10 +63,5 @@ interface TaskInterface
      * @param string $key
      */
     public function setKey($key);
-
-    /**
-     * @return \Iterator|TaskInterface[]
-     */
-    public static function getActiveTasks();
 
 }
