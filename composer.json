@@ -1,0 +1,33 @@
+{
+    "name": "understeam/yii2-command-scheduler",
+    "description": "Yii2 extenstion for Command Bus commands scheduling",
+    "type": "extension",
+    "require": {
+        "yiisoft/yii2": "^2.0",
+        "trntv/yii2-command-bus": "^2",
+        "mtdowling/cron-expression": "^1.1"
+    },
+    "require-dev": {
+        "codeception/codeception": "~2.1",
+        "codeception/verify": "*",
+        "codeception/specify": "*"
+    },
+    "license": "GPLv3",
+    "authors": [
+        {
+            "name": "Anatoly Rugalev",
+            "email": "anatoly.rugalev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "understeam\\scheduler\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "understeam\\scheduler\\tests\\": "tests"
+        }
+    }
+}
