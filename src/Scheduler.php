@@ -9,9 +9,7 @@ namespace understeam\scheduler;
 
 use Yii;
 use yii\base\Component;
-use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
-use trntv\bus\interfaces\CommandBus;
 use Cron\CronExpression;
 
 /**
@@ -33,6 +31,7 @@ class Scheduler extends Component
     const STATUS_ACTIVE = 1;
 
     /**
+     * Schedule an unique task
      * @param null|string $key
      * @param mixed $command
      * @param CronExpression|string $cronExpression
