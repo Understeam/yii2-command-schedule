@@ -4,7 +4,7 @@ This command is alternative for `cron` and any other cron scheduling components.
 It allows to schedule any task dynamically from code:
 
 ```php
-Yii::$app->schedule->add(
+Yii::$app->scheduler->add(
     'my-unique-command-key',    // Unique task key. If task already exists it will be replaced
     $command,                   // Command. May be literally anything. See Executor section
     '0 0 * * *',                // Cron expression
@@ -12,7 +12,7 @@ Yii::$app->schedule->add(
 );
 ```
 
-This is lightweight operation which allows to postpone any heavy tasks into background.
+This lightweight operation allows to postpone any heavy tasks into background.
 
 This tool is `cron` based, so, you need to run a scheduler script every minute.
 Example entry of `crontab` file:
