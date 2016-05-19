@@ -31,7 +31,7 @@ class SchedulerController extends Controller
 
     public function actionCron()
     {
-        $time = time();
+        $time = new \DateTime('now');
         foreach ($this->getScheduler()->all() as $task) {
             if ($this->getScheduler()->handle($task, $time)) {
                 Console::output("Executed " . $task->getKey());
