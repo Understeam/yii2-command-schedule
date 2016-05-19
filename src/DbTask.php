@@ -55,15 +55,26 @@ class DbTask extends ActiveRecord implements TaskInterface
 
     /**
      * @param string $key
-     * @param null $status
      * @return null|TaskInterface
      */
-    public static function get($key, $status = null)
+    public static function get($key)
     {
         return static::find()
             ->andWhere(['key' => $key])
             ->andFilterWhere(['status' => self::STATUS_ACTIVE])
             ->one();
+    }
+
+    /**
+     * @param string $key
+     * @return null|TaskInterface
+     */
+    public static function has($key)
+    {
+        return static::find()
+            ->andWhere(['key' => $key])
+            ->andFilterWhere(['status' => self::STATUS_ACTIVE])
+            ->exists();
     }
 
     public function init()

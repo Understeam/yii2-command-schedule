@@ -70,6 +70,18 @@ class Scheduler extends Component
 
     /**
      * TODO
+     * @param $key
+     * @return boolean
+     */
+    public function has($key)
+    {
+        /** @var TaskInterface $taskClass */
+        $taskClass = $this->taskClass;
+        return $taskClass::has($key);
+    }
+
+    /**
+     * TODO
      * @return \Iterator|TaskInterface[]
      */
     public function all()

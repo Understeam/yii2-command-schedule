@@ -17,10 +17,15 @@ interface TaskInterface
 
     /**
      * @param string $key
-     * @param integer $status
      * @return TaskInterface|null
      */
-    public static function get($key, $status = null);
+    public static function get($key);
+
+    /**
+     * @param string $key
+     * @return boolean
+     */
+    public static function has($key);
 
     /**
      * @return \Iterator|TaskInterface[]
