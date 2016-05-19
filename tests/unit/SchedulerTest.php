@@ -98,6 +98,15 @@ class SchedulerTest extends Test
         expect($this->getScheduler()->get('one-time-task'))->null();
     }
 
+    public function testNextRunDate()
+    {
+        $this->clearTasks();
+        $date = '2016-05-12 01:00:01';
+        $this->getScheduler()->add('every-hour', new EchoCommand('one'), '0 * * * *');
+        $nextDate = $this->getScheduler()->getNextRunDate('every-hour', 0, $date)->format('Y-m-d H:i:s');
+        expect($nextDate)->equals('2016-05-12 02:00:00');
+    }
+
     private function handleAllTasks($time = 'now')
     {
         $tasks = $this->getScheduler()->all();

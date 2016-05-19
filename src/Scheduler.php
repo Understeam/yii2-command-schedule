@@ -69,6 +69,25 @@ class Scheduler extends Component
     }
 
     /**
+     * @param $key
+     * @param int $nth
+     * @param string $currentTime
+     * @return bool|\DateTime
+     */
+    public function getNextRunDate($key, $nth = 0, $currentTime = 'now')
+    {
+        $task = $this->get($key);
+        if ($task === null) {
+            return false;
+        }
+        $expression = CronExpression::factory($task->getExpression());
+        if (!$expression instanceof CronExpression) {
+            return false;
+        }
+        return $expression->getNextRunDate($currentTime, $nth);
+    }
+
+    /**
      * TODO
      * @param $key
      * @return boolean
